@@ -67,6 +67,7 @@ def main():
     time_s = 1  # Any value other than 0.
     while time_s != 0:
         speed_sp = int(input("Enter a speed (0 to 900 dps): "))
+        print(speed_sp)
         if speed_sp == 0:
             break
         distance = int(input("Distance to travel (inches):"))

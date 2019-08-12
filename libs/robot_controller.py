@@ -18,7 +18,40 @@ import time
 
 class Snatch3r(object):
     """Commands for the Snatch3r robot that might be useful in many different programs."""
-    
-    # DONE: Implement the Snatch3r class as needed when working the sandox exercises
-    # (and delete these comments)
 
+
+    def drive_inches(self, inches_target, speed_deg_per_second):
+
+        ev3.Sound.speak("Hello Alfred").wait()
+
+        # Connect two large motors on output ports B and C
+        left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
+        right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
+
+        # Check that the motors are actually connected
+        assert left_motor.connected
+        assert right_motor.connected
+
+        speed_sp = speed_deg_per_second
+        distance = inches_target
+        left_motor.run_to_rel_pos(position_sp=distance * 90, speed_sp=speed_sp)
+        right_motor.run_to_rel_pos(position_sp=distance * 90, speed_sp=speed_sp)
+        left_motor.wait_while(ev3.Motor.STATE_RUNNING)
+        right_motor.wait_while(ev3.Motor.STATE_RUNNING)
+        left_motor.stop(stop_action="brake")
+        right_motor.stop(stop_action="brake")
+        ev3.Sound.beep().wait()
+
+    def turn(self, turn_degrees, speed_deg_per_second):
+
+        print("Turning...")
+        left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
+        right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
+
+        motor_turns_deg = 486*(turn_degrees/90)  # May require some tuning depending on your surface!
+        left_motor.run_to_rel_pos(position_sp=motor_turns_deg, speed_sp=speed_deg_per_second)
+        right_motor.run_to_rel_pos(position_sp=-motor_turns_deg, speed_sp=speed_deg_per_second)
+        # Note, that there is no delay using the commands above, so we must wait
+        left_motor.wait_while(ev3.Motor.STATE_RUNNING)  # Wait for the turn to finish
+        right_motor.wait_while(ev3.Motor.STATE_RUNNING)  # Wait for the turn to finish
+        ev3.Sound.beep().wait()  # Fun little beep
