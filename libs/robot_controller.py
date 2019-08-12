@@ -22,7 +22,7 @@ class Snatch3r(object):
 
     def drive_inches(self, inches_target, speed_deg_per_second):
 
-        ev3.Sound.speak("Hello Alfred").wait()
+        ev3.Sound.speak("Get out of the way").wait()
 
         # Connect two large motors on output ports B and C
         left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
@@ -48,10 +48,10 @@ class Snatch3r(object):
         left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
         right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
 
-        motor_turns_deg = 486*(turn_degrees/90)  # May require some tuning depending on your surface!
+        motor_turns_deg = 480*(turn_degrees/90)  # May require some tuning depending on your surface!
         left_motor.run_to_rel_pos(position_sp=motor_turns_deg, speed_sp=speed_deg_per_second)
         right_motor.run_to_rel_pos(position_sp=-motor_turns_deg, speed_sp=speed_deg_per_second)
-        # Note, that there is no delay using the commands above, so we must wait
+
         left_motor.wait_while(ev3.Motor.STATE_RUNNING)  # Wait for the turn to finish
         right_motor.wait_while(ev3.Motor.STATE_RUNNING)  # Wait for the turn to finish
         ev3.Sound.beep().wait()  # Fun little beep
