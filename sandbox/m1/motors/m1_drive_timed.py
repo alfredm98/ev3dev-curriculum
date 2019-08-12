@@ -78,8 +78,8 @@ Authors: David Fisher and Alfred Mustafa.
 #      time.sleep(some_amount)
 #      stop()
 #   You may NOT use the advanced motor commands at this time like: run_to_abs_pos, run_to_rel_pos, or run_timed.
-# TODO: 6. Modify the program so that it will exit immediately if the answer to   any   question is 0.
-# TODO: 7. Formally test your work. When you think you have the problem complete run these tests to be sure:
+# DONE: 6. Modify the program so that it will exit immediately if the answer to   any   question is 0.
+# DONE: 7. Formally test your work. When you think you have the problem complete run these tests to be sure:
 #   200 dps 24 inches (make sure it drives within 6 inches of the target distance)
 #   400 dps 24 inches (make sure it drives within 6 inches of the target distance)
 #   800 dps 24 inches (make sure it drives within 6 inches of the target distance)
@@ -100,6 +100,8 @@ def main():
     print("  Timed Driving")
     print("--------------------------------------------")
     ev3.Sound.speak("Timed Driving").wait()
+    time.sleep(2)
+    ev3.Sound.speak("Hello Alfred").wait()
 
     # Connect two large motors on output ports B and C
     left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
@@ -112,10 +114,14 @@ def main():
     time_s = 1  # Any value other than 0.
     while time_s != 0:
         speed_sp = int(input("Enter a speed (0 to 900 dps): "))
+        if speed_sp == 0:
+            break
         distance = int(input("Distance to travel (inches):"))
+        if distance == 0:
+            break
         left_motor.run_forever(speed_sp=speed_sp)
         right_motor.run_forever(speed_sp=speed_sp)
-        time.sleep(distance/5)
+        time.sleep(distance/(speed_sp/90))
         left_motor.stop(stop_action="brake")
         right_motor.stop(stop_action="brake")
 
