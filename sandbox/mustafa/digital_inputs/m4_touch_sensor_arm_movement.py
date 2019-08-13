@@ -122,7 +122,7 @@ def arm_down(arm_motor):
     # Make a beep sound
 
     # Code that attempts to do this task but has bugs.  Fix them.
-    arm_motor.run_to_abs_pos(position_sp= -12)
+    arm_motor.run_to_abs_pos(position_sp= 0)
     arm_motor.wait_while(ev3.Motor.STATE_HOLDING)  # Blocks until the motor finishes running
 
     # DONE: 6. After you fix the bugs in the three arm movement commands demo your code to a TA or instructor.
