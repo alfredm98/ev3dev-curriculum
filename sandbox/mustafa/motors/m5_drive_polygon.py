@@ -14,9 +14,9 @@ import robot_controller as robo
 
 def main():
     print("--------------------------------------------")
-    print(" Drive polygon")
+    print(" Final Project")
     print("--------------------------------------------")
-    ev3.Sound.speak("Drive polygon").wait()
+    ev3.Sound.speak("Final Project").wait()
     robot = robo.Snatch3r()
 
     while True:
