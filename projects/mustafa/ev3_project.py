@@ -37,7 +37,7 @@ def main():
     rc2.on_red_down = lambda state: handle_arm_down_button(state, robot)
 
     rc3 = ev3.RemoteControl(channel=3)
-    rc3.on_red_up = lambda state: stack(state, robot)
+    rc3.on_red_up = lambda state: turn(state, robot)
     rc3.on_red_down = lambda state: dance(state, robot)
     rc3.on_blue_up = lambda state: play_song(state)
 
@@ -97,16 +97,11 @@ def handle_shutdown(button_state, dc):
         dc.running = False
 
 
-def stack(button_state, robot):
+def turn(button_state, robot):
     if button_state:
         speed_sp = int(input("Enter a speed (0 to 900 dps): "))
-        robot.stack(speed_sp)
-        ev3.LargeMotor(ev3.OUTPUT_B).run_forever(speed_sp=-900)
-        ev3.LargeMotor(ev3.OUTPUT_C).run_forever(speed_sp=-900)
-        time.sleep(1)
-        ev3.LargeMotor(ev3.OUTPUT_B).stop(stop_action='brake')
-        ev3.LargeMotor(ev3.OUTPUT_C).stop(stop_action='brake')
-        robot.arm_down()
+        turn_degrees = int(input("Enter a degree (0 to 360): "))
+        robot.turn(turn_degrees, speed_sp)
 
 
 def dance(button_state, robot):
