@@ -141,3 +141,12 @@ class Snatch3r(object):
         arm_motor.wait_while(ev3.Motor.STATE_HOLDING)
         print("Goodbye")
         ev3.Sound.speak("Good bye").wait()
+
+    def stack(self, speed_sp):
+        self.arm_up()
+        self.turn(180, speed_sp)
+
+        arm_motor.run_to_abs_pos(position_sp=4000)
+        arm_motor.wait_while(ev3.Motor.STATE_HOLDING)
+        arm_motor.wait_while(ev3.Motor.STATE_RUNNING)
+

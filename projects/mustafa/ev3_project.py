@@ -17,15 +17,14 @@ class DataContainer(object):
 
 def main():
     print("--------------------------------------------")
-    print(" Drive polygon")
+    print("Final Project")
     print("--------------------------------------------")
-    ev3.Sound.speak("Drive polygon").wait()
+    ev3.Sound.speak("Final Project").wait()
 
     ev3.Leds.all_off()  # Turn the leds off
     robot = robo.Snatch3r()
     dc = DataContainer()
 
-    # DONE: 4. Add the necessary IR handler callbacks as per the instructions above.
     # Remote control channel 1 is for driving the crawler tracks around (none of these functions exist yet below).
     # Remote control channel 2 is for moving the arm up and down (all of these functions already exist below).
 
@@ -36,6 +35,15 @@ def main():
     rc2 = ev3.RemoteControl(channel=2)
     rc2.on_red_up = lambda state: handle_arm_up_button(state, robot)
     rc2.on_red_down = lambda state: handle_arm_down_button(state, robot)
+
+    rc3 = ev3.RemoteControl(channel=3)
+    rc3.on_red_up = lambda state: stack(state, robot)
+    rc3.on_red_down = lambda state: dance(state, robot)
+    rc3.on_blue_up = lambda state: play_song(state)
+
+    rc4 = ev3.RemoteControl(channel=4)
+    rc4.on_red_up = lambda state: go_crazy(state, dc)
+    rc4.on_blue_down = lambda state: handle_shutdown(state, dc)
 
     # For our standard shutdown button.
     btn = ev3.Button()
@@ -48,13 +56,10 @@ def main():
         btn.process()
         rc1.process()
         rc2.process()
+        rc3.process()
+        rc4.process()
         time.sleep(0.01)
 
-    # DONE: 2. Have everyone talk about this problem together then pick one  member to modify libs/robot_controller.py
-    # as necessary to implement the method below as per the instructions in the opening doc string. Once the code has
-    # been tested and shown to work, then have that person commit their work.  All other team members need to do a
-    # VCS --> Update project...
-    # Once the library is implemented any team member should be able to run his code as stated in todo3.
     robot.shutdown()
 
 
@@ -90,6 +95,64 @@ def handle_calibrate_button(button_state, robot):
 def handle_shutdown(button_state, dc):
     if button_state:
         dc.running = False
+
+
+def stack(button_state, robot):
+    if button_state:
+        speed_sp = int(input("Enter a speed (0 to 900 dps): "))
+        robot.stack(speed_sp)
+        ev3.LargeMotor(ev3.OUTPUT_B).run_forever(speed_sp=-900)
+        ev3.LargeMotor(ev3.OUTPUT_C).run_forever(speed_sp=-900)
+        time.sleep(1)
+        ev3.LargeMotor(ev3.OUTPUT_B).stop(stop_action='brake')
+        ev3.LargeMotor(ev3.OUTPUT_C).stop(stop_action='brake')
+        robot.arm_down()
+
+
+def dance(button_state, robot):
+    if button_state:
+        ev3.LargeMotor(ev3.OUTPUT_B).run_forever(speed_sp=900)
+        ev3.LargeMotor(ev3.OUTPUT_C).run_forever(speed_sp=-900)
+        time.sleep(0.4)
+        ev3.LargeMotor(ev3.OUTPUT_B).stop(stop_action='brake')
+        ev3.LargeMotor(ev3.OUTPUT_C).stop(stop_action='brake')
+        ev3.LargeMotor(ev3.OUTPUT_B).run_forever(speed_sp=-900)
+        ev3.LargeMotor(ev3.OUTPUT_C).run_forever(speed_sp=900)
+        time.sleep(0.4)
+        ev3.LargeMotor(ev3.OUTPUT_B).stop(stop_action='brake')
+        ev3.LargeMotor(ev3.OUTPUT_C).stop(stop_action='brake')
+        ev3.LargeMotor(ev3.OUTPUT_B).run_forever(speed_sp=900)
+        ev3.LargeMotor(ev3.OUTPUT_C).run_forever(speed_sp=-900)
+        time.sleep(0.4)
+        ev3.LargeMotor(ev3.OUTPUT_B).stop(stop_action='brake')
+        ev3.LargeMotor(ev3.OUTPUT_C).stop(stop_action='brake')
+        ev3.LargeMotor(ev3.OUTPUT_B).run_forever(speed_sp=-900)
+        ev3.LargeMotor(ev3.OUTPUT_C).run_forever(speed_sp=900)
+        time.sleep(0.4)
+        ev3.LargeMotor(ev3.OUTPUT_B).stop(stop_action='brake')
+        ev3.LargeMotor(ev3.OUTPUT_C).stop(stop_action='brake')
+
+
+def go_crazy(button_state, robot):
+    if button_state:
+        ev3.LargeMotor(ev3.OUTPUT_B).run_forever(speed_sp=900)
+        ev3.LargeMotor(ev3.OUTPUT_C).run_forever(speed_sp=-900)
+        time.sleep(8)
+        ev3.LargeMotor(ev3.OUTPUT_B).stop(stop_action='brake')
+        ev3.LargeMotor(ev3.OUTPUT_C).stop(stop_action='brake')
+
+
+def play_song(button_state):
+    if button_state:
+        print("Right button is pressed")
+        play_wav_file()
+
+
+def play_wav_file():
+    # File from http://www.moviesoundclips.net/ev3.Sound.php?id=288
+    # Had to convert it to a PCM signed 16-bit little-endian .wav file
+    # http://audio.online-convert.com/convert-to-wav
+    ev3.Sound.play("/home/robot/csse120/assets/sounds/awesome_pcm.wav")
 
 
 main()
